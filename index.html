@@ -56,6 +56,53 @@ const store = {
 function defaultTeachers(){return [
   {teacherId:"T000", name:"教室長", loginId:"T000", password:"Manager123", role:"admin", status:"在籍", memo:"", mustChangePassword:false}
 ]}
+ 
+const SPREADSHEET_API_URL = "https://script.google.com/macros/s/AKfycbyibbZ4Kqnl2WdjYG-nTQpmW60WC_YD2LdZs9YvOSoUxFBg2TMB2UhXOFwB93Mlt-9tBA/exec"; 
+
+const sheetSync = {
+
+  async importFromSpreadsheet() {
+    if (!confirm("スプレッドシートからデータを読み込みます。現在のスマホ内のデータは上書きされますがよろしいですか？")) return;
+    
+    try {
+      const response = await fetch(SPREADSHEET_API_URL);
+      const data = await response.json();
+      
+      if (data.shifts) store.write("sl_shifts_v1", data.shifts);
+      if (data.teachers) store.write("sl_teachers_v1", data.teachers);
+      if (data.demos) store.write("sl_demos_v1", data.demos);
+      
+      alert("🎉 スプレッドシートから最新データを同期しました！");
+      location.reload();
+    } catch (error) {
+      console.error("Import failed:", error);
+      alert("データの読み込みに失敗しました。GASのURLや公開範囲を確認してください。");
+    }
+  },
+
+  // 2. アプリからスプシへ保存
+  async exportToSpreadsheet() {
+    if (!confirm("現在のデータをスプレッドシートに保存しますか？")) return;
+
+    const payload = {
+      shifts: repo.loadShifts(),
+      teachers: repo.loadTeachers(),
+      demos: repo.loadDemos()
+    };
+
+    try {
+      await fetch(SPREADSHEET_API_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+      alert("🚀 スプレッドシートへの保存が完了しました！");
+    } catch (error) {
+      console.error("Export failed:", error);
+      alert("通信処理を完了しました。スプレッドシートを確認してください！");
+    }
+  }
+};
+
 const repo = {
   loadTeachers(){return store.read("sl_teachers_v4", defaultTeachers())}, saveTeachers(data){return store.write("sl_teachers_v4",data)},
   loadShiftRequests(){return store.read("sl_shift_requests_v3",[])}, saveShiftRequests(data){return store.write("sl_shift_requests_v3",data)},
