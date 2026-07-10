@@ -64,7 +64,7 @@ const sheetSync = {
   async importFromSpreadsheet() {
     try {
       // GASのURLが初期値のままなら通信しない（安全対策）
-      if (SPREADSHEET_API_URL === "https://script.google.com/macros/s/XXXXX/exec") return;
+      if (SPREADSHEET_API_URL === "https://script.google.com/macros/s/AKfycbyibbZ4Kqnl2WdjYG-nTQpmW60WC_YD2LdZs9YvOSoUxFBg2TMB2UhXOFwB93Mlt-9tBA/exec") return;
 
       const response = await fetch(SPREADSHEET_API_URL);
       const data = await response.json();
