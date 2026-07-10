@@ -60,10 +60,7 @@ const repo = {
   loadTeachers(){return store.read("sl_teachers_v4", defaultTeachers())}, saveTeachers(data){return store.write("sl_teachers_v4",data)},
   loadShiftRequests(){return store.read("sl_shift_requests_v3",[])}, saveShiftRequests(data){return store.write("sl_shift_requests_v3",data)},
   loadStaffShifts(){return store.read("sl_staff_shifts_v2",[])}, saveStaffShifts(data){return store.write("sl_staff_shifts_v2",data)},
-  loadDemoLessons(){return store.read("sl_demo_lessons_v2",[
-    {demoId:"D001",date:"2026-07-20",arrivalTime:"16:30",lessonStartTime:"17:00",grade:"中3",subject:"数学",studentName:"山田 太郎",schoolName:"第一中学校",managerMemo:"計算分野を重点確認",parentNotes:"初回面談希望",enrollmentResult:"",remarks:"",assignedTeacherId:"",status:DEMO.OPEN,confirmedAt:"",createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()},
-    {demoId:"D002",date:"2026-07-21",arrivalTime:"17:50",lessonStartTime:"18:20",grade:"高2",subject:"英語",studentName:"佐々木 花",schoolName:"中央高校",managerMemo:"長文読解の相談",parentNotes:"部活後に来校",enrollmentResult:"",remarks:"",assignedTeacherId:"",status:DEMO.OPEN,confirmedAt:"",createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}
-  ])}, saveDemoLessons(data){return store.write("sl_demo_lessons_v2",data)},
+  loadDemoLessons(){return store.read("sl_demo_lessons_v2",[])}, saveDemoLessons(data){return store.write("sl_demo_lessons_v2",data)},
   loadDemoApplications(){return store.read("sl_demo_applications_v2",[])}, saveDemoApplications(data){return store.write("sl_demo_applications_v2",data)},
   loadManagerAbsences(){return store.read("sl_manager_absences_v1",[])}, saveManagerAbsences(data){return store.write("sl_manager_absences_v1",data)},
   loadNotifications(){return store.read("sl_notifications_v2",[])}, saveNotifications(data){return store.write("sl_notifications_v2",data)},
