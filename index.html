@@ -62,7 +62,7 @@ const SPREADSHEET_API_URL = "https://script.google.com/macros/s/AKfycbyibbZ4Kqnl
 const sheetSync = {
 
   async importFromSpreadsheet() {
-    if (!confirm("スプレッドシートからデータを読み込みます。現在のスマホ内のデータは上書きされますがよろしいですか？")) return;
+    if (!confirm("データを読み込みます。現在のスマホ内のデータは上書きされますがよろしいですか？")) return;
     
     try {
       const response = await fetch(SPREADSHEET_API_URL);
@@ -72,17 +72,15 @@ const sheetSync = {
       if (data.teachers) store.write("sl_teachers_v1", data.teachers);
       if (data.demos) store.write("sl_demos_v1", data.demos);
       
-      alert("🎉 スプレッドシートから最新データを同期しました！");
+      alert("🎉最新データを同期しました！");
       location.reload();
     } catch (error) {
       console.error("Import failed:", error);
-      alert("データの読み込みに失敗しました。GASのURLや公開範囲を確認してください。");
+      alert("データの読み込みに失敗しました。");
     }
   },
-
-  // 2. アプリからスプシへ保存
   async exportToSpreadsheet() {
-    if (!confirm("現在のデータをスプレッドシートに保存しますか？")) return;
+    if (!confirm("現在のデータを保存しますか？")) return;
 
     const payload = {
       shifts: repo.loadShifts(),
@@ -95,10 +93,10 @@ const sheetSync = {
         method: "POST",
         body: JSON.stringify(payload)
       });
-      alert("🚀 スプレッドシートへの保存が完了しました！");
+      alert("🚀保存が完了しました！");
     } catch (error) {
       console.error("Export failed:", error);
-      alert("通信処理を完了しました。スプレッドシートを確認してください！");
+      alert("通信処理を完了しました。");
     }
   }
 };
@@ -387,6 +385,16 @@ function timeSelect(id,selected){return `<select id="${id}" class="p-2 border ro
 function gradeSelect(id,selected){return `<select id="${id}" class="p-2 border rounded-lg text-xs bg-white">${gradeOptions.map(g=>`<option ${g===selected?"selected":""}>${g}</option>`).join("")}</select>`}
 function subjectSelect(id,selected){return `<select id="${id}" onchange="toggleSubjectOther()" class="p-2 border rounded-lg text-xs bg-white">${subjectOptions.map(s=>`<option ${s===selected?"selected":""}>${s}</option>`).join("")}</select>`}
 function toggleSubjectOther(){const select=document.getElementById("demo-subject"),other=document.getElementById("demo-subject-other");if(!select||!other)return;other.classList.toggle("hidden",select.value!=="その他");if(select.value!=="その他")other.value=""}
+function toggleSubjectOther(){const select=document.getElementById("demo-subject"),other=document.getElementById("demo-subject-other");if(!select||!other)return;other.classList.toggle("hidden",select.value!=="その他");if(select.value!=="その他")other.value=""}
+window.addEventListener("DOMContentLoaded", async () => {
+  if (typeof sheetSync !== 'undefined' && SPREADSHEET_API_URL !== "https://script.google.com/macros/s/XXXXX/exec") {
+    console.log("⏳ データを自動同期中...");
+    await sheetSync.importFromSpreadsheet(); 
+  }
+  if (typeof render === "function") {
+    render(); 
+  }
+});
 </script>
 </body>
 </html>
